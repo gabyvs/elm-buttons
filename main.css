@@ -1,0 +1,19 @@
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    line-height:1.25;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .5rem 1rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+    margin: 1rem;
+}
+.container {
+    display: flex;
+    align-items: center;
+}
