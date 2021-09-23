@@ -1,46 +1,55 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (button, div, text)
-import Html.Attributes exposing (class)
-import Html.Events exposing (onClick)
+import Html exposing (Html, div, input, text)
+import Html.Attributes exposing (class, placeholder, value)
+import Html.Events exposing (onInput)
+
+
+
+-- MAIN
 
 
 main =
-    Browser.sandbox { init = 0, update = update, view = view }
+    Browser.sandbox { init = init, update = update, view = view }
+
+
+
+-- MODEL
+
+
+type alias Model =
+    { content : String }
+
+
+init : Model
+init =
+    { content = "" }
+
+
+
+-- UPDATE
 
 
 type Msg
-    = Increment
-    | Decrement
-    | Increment10
-    | Decrement10
-    | Reset
+    = Change String
 
 
+update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Increment ->
-            model + 1
+        Change newContent ->
+            { model | content = newContent }
 
-        Decrement ->
-            model - 1
 
-        Increment10 ->
-            model + 10
 
-        Decrement10 ->
-            model - 10
+-- VIEW
 
-        Reset ->
-            0
 
+view : Model -> Html Msg
 view model =
-    div [ class "container" ]
-        [ button [ class "btn", onClick Decrement10 ] [ text "-10" ]
-        , button [ class "btn", onClick Decrement ] [ text "-" ]
-        , div [] [ text (String.fromInt model) ]
-        , button [ class "btn", onClick Increment ] [ text "+" ]
-        , button [ class "btn", onClick Increment10 ] [ text "+10" ]
-        , button [ class "btn", onClick Reset ] [ text "Reset" ]
+    div []
+        [ input [ placeholder "Text to reverse", value model.content, onInput Change ] []
+        , div [] [ text ("Text length: " ++ String.fromInt (String.length model.content) ++ " characters") ]
+        , div [] [ text ("Reversed text: " ++ String.reverse model.content) ]
         ]
