@@ -4355,7 +4355,11 @@ function _Browser_load(url)
 		}
 	}));
 }
-var $author$project$Main$init = {content: ''};
+var $author$project$Main$Model = F3(
+	function (username, password, confirm) {
+		return {confirm: confirm, password: password, username: username};
+	});
+var $author$project$Main$init = A3($author$project$Main$Model, '', '', '');
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -5168,13 +5172,32 @@ var $elm$browser$Browser$sandbox = function (impl) {
 };
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		var newContent = msg.a;
-		return _Utils_update(
-			model,
-			{content: newContent});
+		switch (msg.$) {
+			case 'Username':
+				var username = msg.a;
+				return _Utils_update(
+					model,
+					{username: username});
+			case 'Pass':
+				var pass = msg.a;
+				return _Utils_update(
+					model,
+					{password: pass});
+			default:
+				var pass = msg.a;
+				return _Utils_update(
+					model,
+					{confirm: pass});
+		}
 	});
-var $author$project$Main$Change = function (a) {
-	return {$: 'Change', a: a};
+var $author$project$Main$Confirm = function (a) {
+	return {$: 'Confirm', a: a};
+};
+var $author$project$Main$Pass = function (a) {
+	return {$: 'Pass', a: a};
+};
+var $author$project$Main$Username = function (a) {
+	return {$: 'Username', a: a};
 };
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$input = _VirtualDom_node('input');
@@ -5221,42 +5244,113 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
-var $elm$core$String$reverse = _String_reverse;
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$viewInput = F4(
+	function (inputType, inputPlaceholder, inputValue, toMsg) {
+		return A2(
+			$elm$html$Html$input,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$type_(inputType),
+					$elm$html$Html$Attributes$placeholder(inputPlaceholder),
+					$elm$html$Html$Attributes$value(inputValue),
+					$elm$html$Html$Events$onInput(toMsg)
+				]),
+			_List_Nil);
+	});
+var $elm$core$String$any = _String_any;
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $elm$core$Basics$not = _Basics_not;
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$viewValidation = function (model) {
+	return (!$elm$core$String$length(model.username)) ? A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'color', 'red')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Username cannot be empty')
+			])) : ((!$elm$core$String$length(model.password)) ? A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'color', 'red')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Password cannot be empty')
+			])) : ((!_Utils_eq(model.password, model.confirm)) ? A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'color', 'red')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Passwords don\'t match')
+			])) : (($elm$core$String$length(model.password) < 8) ? A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'color', 'red')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Password should be at least 8 characters')
+			])) : ((!A2($elm$core$String$any, $elm$core$Char$isDigit, model.password)) ? A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'color', 'red')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Password needs to have a digit')
+			])) : ((!A2($elm$core$String$any, $elm$core$Char$isLower, model.password)) ? A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'color', 'red')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Password needs to have a lower case letter')
+			])) : ((!A2($elm$core$String$any, $elm$core$Char$isUpper, model.password)) ? A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'color', 'red')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Password needs to have an upper case letter')
+			])) : A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'color', 'green')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('OK')
+			]))))))));
+};
 var $author$project$Main$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
-				A2(
-				$elm$html$Html$input,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$placeholder('Text to reverse'),
-						$elm$html$Html$Attributes$value(model.content),
-						$elm$html$Html$Events$onInput($author$project$Main$Change)
-					]),
-				_List_Nil),
-				A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text(
-						'Text length: ' + ($elm$core$String$fromInt(
-							$elm$core$String$length(model.content)) + ' characters'))
-					])),
-				A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text(
-						'Reversed text: ' + $elm$core$String$reverse(model.content))
-					]))
+				A4($author$project$Main$viewInput, 'text', 'Username', model.username, $author$project$Main$Username),
+				A4($author$project$Main$viewInput, 'password', 'Password', model.password, $author$project$Main$Pass),
+				A4($author$project$Main$viewInput, 'password', 'Confirm password', model.confirm, $author$project$Main$Confirm),
+				$author$project$Main$viewValidation(model)
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$sandbox(
