@@ -4355,8 +4355,7 @@ function _Browser_load(url)
 		}
 	}));
 }
-var $elm$core$Maybe$Nothing = {$: 'Nothing'};
-var $author$project$Main$init = {celsius: '', fahrenheit: $elm$core$Maybe$Nothing};
+var $author$project$Main$init = {celsius: ''};
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -4463,6 +4462,7 @@ var $elm$core$Basics$add = _Basics_add;
 var $elm$core$Maybe$Just = function (a) {
 	return {$: 'Just', a: a};
 };
+var $elm$core$Maybe$Nothing = {$: 'Nothing'};
 var $elm$core$String$all = _String_all;
 var $elm$core$Basics$and = _Basics_and;
 var $elm$core$Basics$append = _Utils_append;
@@ -5166,30 +5166,18 @@ var $elm$browser$Browser$sandbox = function (impl) {
 			view: impl.view
 		});
 };
-var $elm$core$String$toFloat = _String_toFloat;
-var $author$project$Main$updateFahrenheit = function (celsius) {
-	var _v0 = $elm$core$String$toFloat(celsius);
-	if (_v0.$ === 'Nothing') {
-		return $elm$core$Maybe$Nothing;
-	} else {
-		var c = _v0.a;
-		return $elm$core$Maybe$Just(((c * 9) / 5) + 32);
-	}
-};
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		var newValue = msg.a;
+		var newInput = msg.a;
 		return _Utils_update(
 			model,
-			{
-				celsius: newValue,
-				fahrenheit: $author$project$Main$updateFahrenheit(newValue)
-			});
+			{celsius: newInput});
 	});
+var $elm$core$String$fromFloat = _String_fromNumber;
+var $elm$core$String$toFloat = _String_toFloat;
 var $author$project$Main$Change = function (a) {
 	return {$: 'Change', a: a};
 };
-var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
@@ -5225,6 +5213,11 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			$elm$html$Html$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
+var $elm$html$Html$span = _VirtualDom_node('span');
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -5233,49 +5226,49 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			key,
 			$elm$json$Json$Encode$string(string));
 	});
-var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $elm$core$String$fromFloat = _String_fromNumber;
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Main$viewFahrenheit = function (fahrenheit) {
-	if (fahrenheit.$ === 'Nothing') {
+var $author$project$Main$viewConverter = F3(
+	function (userInput, color, equivalentTemp) {
 		return A2(
-			$elm$html$Html$div,
+			$elm$html$Html$span,
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text('Invalid celsius')
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$value(userInput),
+							$elm$html$Html$Events$onInput($author$project$Main$Change),
+							A2($elm$html$Html$Attributes$style, 'width', '40px')
+						]),
+					_List_Nil),
+					$elm$html$Html$text('°C = '),
+					A2(
+					$elm$html$Html$span,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'color', color)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(equivalentTemp)
+						])),
+					$elm$html$Html$text('°F')
 				]));
-	} else {
-		var f = fahrenheit.a;
-		return A2(
-			$elm$html$Html$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					$elm$html$Html$text(
-					'Equivalent to: ' + ($elm$core$String$fromFloat(f) + ' F'))
-				]));
-	}
-};
+	});
 var $author$project$Main$view = function (model) {
-	return A2(
-		$elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$input,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$placeholder('Enter temperature in Celsius'),
-						$elm$html$Html$Attributes$value(model.celsius),
-						$elm$html$Html$Events$onInput($author$project$Main$Change)
-					]),
-				_List_Nil),
-				$author$project$Main$viewFahrenheit(model.fahrenheit)
-			]));
+	var _v0 = $elm$core$String$toFloat(model.celsius);
+	if (_v0.$ === 'Just') {
+		var celsius = _v0.a;
+		return A3(
+			$author$project$Main$viewConverter,
+			model.celsius,
+			'blue',
+			$elm$core$String$fromFloat((celsius * 1.8) + 32));
+	} else {
+		return A3($author$project$Main$viewConverter, model.celsius, 'red', '???');
+	}
 };
 var $author$project$Main$main = $elm$browser$Browser$sandbox(
 	{init: $author$project$Main$init, update: $author$project$Main$update, view: $author$project$Main$view});

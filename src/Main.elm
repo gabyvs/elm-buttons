@@ -1,8 +1,8 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, div, input, text)
-import Html.Attributes exposing (placeholder, value)
+import Html exposing (Html, input, span, text)
+import Html.Attributes exposing (style, value)
 import Html.Events exposing (onInput)
 
 
@@ -20,14 +20,12 @@ main =
 
 type alias Model =
     { celsius : String
-    , fahrenheit : Maybe Float
     }
 
 
 init : Model
 init =
     { celsius = ""
-    , fahrenheit = Nothing
     }
 
 
@@ -39,41 +37,32 @@ type Msg
     = Change String
 
 
-updateFahrenheit : String -> Maybe Float
-updateFahrenheit celsius =
-    -- how to define a local variable?
-    case String.toFloat celsius of
-        Nothing ->
-            Nothing
-
-        Just c ->
-            Just ((c * 9 / 5) + 32)
-
-
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Change newValue ->
-            { model | celsius = newValue, fahrenheit = updateFahrenheit newValue }
+        Change newInput ->
+            { model | celsius = newInput }
 
 
 
 -- VIEW
 
 
-viewFahrenheit : Maybe Float -> Html Msg
-viewFahrenheit fahrenheit =
-    case fahrenheit of
-        Nothing ->
-            div [] [ text "Invalid celsius" ]
-
-        Just f ->
-            div [] [ text ("Equivalent to: " ++ String.fromFloat f ++ " F") ]
-
-
 view : Model -> Html Msg
 view model =
-    div []
-        [ input [ placeholder "Enter temperature in Celsius", value model.celsius, onInput Change ] []
-        , viewFahrenheit model.fahrenheit
+    case String.toFloat model.celsius of
+        Just celsius ->
+            viewConverter model.celsius "blue" (String.fromFloat (celsius * 1.8 + 32))
+
+        Nothing ->
+            viewConverter model.celsius "red" "???"
+
+
+viewConverter : String -> String -> String -> Html Msg
+viewConverter userInput color equivalentTemp =
+    span []
+        [ input [ value userInput, onInput Change, style "width" "40px" ] []
+        , text "°C = "
+        , span [ style "color" color ] [ text equivalentTemp ]
+        , text "°F"
         ]
