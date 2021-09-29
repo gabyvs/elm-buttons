@@ -5227,8 +5227,8 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $author$project$Main$viewConverter = F3(
-	function (userInput, color, equivalentTemp) {
+var $author$project$Main$viewConverter = F4(
+	function (userInput, color, equivalentTemp, borderColor) {
 		return A2(
 			$elm$html$Html$span,
 			_List_Nil,
@@ -5240,7 +5240,8 @@ var $author$project$Main$viewConverter = F3(
 						[
 							$elm$html$Html$Attributes$value(userInput),
 							$elm$html$Html$Events$onInput($author$project$Main$Change),
-							A2($elm$html$Html$Attributes$style, 'width', '40px')
+							A2($elm$html$Html$Attributes$style, 'width', '40px'),
+							A2($elm$html$Html$Attributes$style, 'border-color', borderColor)
 						]),
 					_List_Nil),
 					$elm$html$Html$text('°C = '),
@@ -5261,13 +5262,14 @@ var $author$project$Main$view = function (model) {
 	var _v0 = $elm$core$String$toFloat(model.celsius);
 	if (_v0.$ === 'Just') {
 		var celsius = _v0.a;
-		return A3(
+		return A4(
 			$author$project$Main$viewConverter,
 			model.celsius,
 			'blue',
-			$elm$core$String$fromFloat((celsius * 1.8) + 32));
+			$elm$core$String$fromFloat((celsius * 1.8) + 32),
+			'black');
 	} else {
-		return A3($author$project$Main$viewConverter, model.celsius, 'red', '???');
+		return A4($author$project$Main$viewConverter, model.celsius, 'red', '???', 'red');
 	}
 };
 var $author$project$Main$main = $elm$browser$Browser$sandbox(
