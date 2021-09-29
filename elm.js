@@ -4355,11 +4355,8 @@ function _Browser_load(url)
 		}
 	}));
 }
-var $author$project$Main$Model = F3(
-	function (username, password, confirm) {
-		return {confirm: confirm, password: password, username: username};
-	});
-var $author$project$Main$init = A3($author$project$Main$Model, '', '', '');
+var $elm$core$Maybe$Nothing = {$: 'Nothing'};
+var $author$project$Main$init = {celsius: '', fahrenheit: $elm$core$Maybe$Nothing};
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -4466,7 +4463,6 @@ var $elm$core$Basics$add = _Basics_add;
 var $elm$core$Maybe$Just = function (a) {
 	return {$: 'Just', a: a};
 };
-var $elm$core$Maybe$Nothing = {$: 'Nothing'};
 var $elm$core$String$all = _String_all;
 var $elm$core$Basics$and = _Basics_and;
 var $elm$core$Basics$append = _Utils_append;
@@ -5170,34 +5166,28 @@ var $elm$browser$Browser$sandbox = function (impl) {
 			view: impl.view
 		});
 };
+var $elm$core$String$toFloat = _String_toFloat;
+var $author$project$Main$updateFahrenheit = function (celsius) {
+	var _v0 = $elm$core$String$toFloat(celsius);
+	if (_v0.$ === 'Nothing') {
+		return $elm$core$Maybe$Nothing;
+	} else {
+		var c = _v0.a;
+		return $elm$core$Maybe$Just(((c * 9) / 5) + 32);
+	}
+};
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		switch (msg.$) {
-			case 'Username':
-				var username = msg.a;
-				return _Utils_update(
-					model,
-					{username: username});
-			case 'Pass':
-				var pass = msg.a;
-				return _Utils_update(
-					model,
-					{password: pass});
-			default:
-				var pass = msg.a;
-				return _Utils_update(
-					model,
-					{confirm: pass});
-		}
+		var newValue = msg.a;
+		return _Utils_update(
+			model,
+			{
+				celsius: newValue,
+				fahrenheit: $author$project$Main$updateFahrenheit(newValue)
+			});
 	});
-var $author$project$Main$Confirm = function (a) {
-	return {$: 'Confirm', a: a};
-};
-var $author$project$Main$Pass = function (a) {
-	return {$: 'Pass', a: a};
-};
-var $author$project$Main$Username = function (a) {
-	return {$: 'Username', a: a};
+var $author$project$Main$Change = function (a) {
+	return {$: 'Change', a: a};
 };
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$input = _VirtualDom_node('input');
@@ -5244,102 +5234,30 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
-var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $author$project$Main$viewInput = F4(
-	function (inputType, inputPlaceholder, inputValue, toMsg) {
-		return A2(
-			$elm$html$Html$input,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$type_(inputType),
-					$elm$html$Html$Attributes$placeholder(inputPlaceholder),
-					$elm$html$Html$Attributes$value(inputValue),
-					$elm$html$Html$Events$onInput(toMsg)
-				]),
-			_List_Nil);
-	});
-var $elm$core$String$any = _String_any;
-var $elm$core$Basics$neq = _Utils_notEqual;
-var $elm$core$Basics$not = _Basics_not;
-var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Main$viewValidation = function (model) {
-	return (!$elm$core$String$length(model.username)) ? A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'color', 'red')
-			]),
-		_List_fromArray(
-			[
-				$elm$html$Html$text('Username cannot be empty')
-			])) : ((!$elm$core$String$length(model.password)) ? A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'color', 'red')
-			]),
-		_List_fromArray(
-			[
-				$elm$html$Html$text('Password cannot be empty')
-			])) : ((!_Utils_eq(model.password, model.confirm)) ? A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'color', 'red')
-			]),
-		_List_fromArray(
-			[
-				$elm$html$Html$text('Passwords don\'t match')
-			])) : (($elm$core$String$length(model.password) < 8) ? A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'color', 'red')
-			]),
-		_List_fromArray(
-			[
-				$elm$html$Html$text('Password should be at least 8 characters')
-			])) : ((!A2($elm$core$String$any, $elm$core$Char$isDigit, model.password)) ? A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'color', 'red')
-			]),
-		_List_fromArray(
-			[
-				$elm$html$Html$text('Password needs to have a digit')
-			])) : ((!A2($elm$core$String$any, $elm$core$Char$isLower, model.password)) ? A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'color', 'red')
-			]),
-		_List_fromArray(
-			[
-				$elm$html$Html$text('Password needs to have a lower case letter')
-			])) : ((!A2($elm$core$String$any, $elm$core$Char$isUpper, model.password)) ? A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'color', 'red')
-			]),
-		_List_fromArray(
-			[
-				$elm$html$Html$text('Password needs to have an upper case letter')
-			])) : A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'color', 'green')
-			]),
-		_List_fromArray(
-			[
-				$elm$html$Html$text('OK')
-			]))))))));
+var $author$project$Main$viewFahrenheit = function (fahrenheit) {
+	if (fahrenheit.$ === 'Nothing') {
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Invalid celsius')
+				]));
+	} else {
+		var f = fahrenheit.a;
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text(
+					'Equivalent to: ' + ($elm$core$String$fromFloat(f) + ' F'))
+				]));
+	}
 };
 var $author$project$Main$view = function (model) {
 	return A2(
@@ -5347,10 +5265,16 @@ var $author$project$Main$view = function (model) {
 		_List_Nil,
 		_List_fromArray(
 			[
-				A4($author$project$Main$viewInput, 'text', 'Username', model.username, $author$project$Main$Username),
-				A4($author$project$Main$viewInput, 'password', 'Password', model.password, $author$project$Main$Pass),
-				A4($author$project$Main$viewInput, 'password', 'Confirm password', model.confirm, $author$project$Main$Confirm),
-				$author$project$Main$viewValidation(model)
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$placeholder('Enter temperature in Celsius'),
+						$elm$html$Html$Attributes$value(model.celsius),
+						$elm$html$Html$Events$onInput($author$project$Main$Change)
+					]),
+				_List_Nil),
+				$author$project$Main$viewFahrenheit(model.fahrenheit)
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$sandbox(
