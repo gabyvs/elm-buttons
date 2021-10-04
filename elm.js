@@ -5169,10 +5169,17 @@ var $elm$browser$Browser$sandbox = function (impl) {
 };
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		var newInput = msg.a;
-		return _Utils_update(
-			model,
-			{celsius: newInput});
+		if (msg.$ === 'Change') {
+			var newInput = msg.a;
+			return _Utils_update(
+				model,
+				{celsius: newInput});
+		} else {
+			var converter = msg.a;
+			return _Utils_update(
+				model,
+				{converterType: converter});
+		}
 	});
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$core$String$toFloat = _String_toFloat;
@@ -5180,6 +5187,15 @@ var $author$project$Main$Change = function (a) {
 	return {$: 'Change', a: a};
 };
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$Main$fromLabel = function (converter) {
+	if (converter.$ === 'CtoF') {
+		return $elm$html$Html$text('°C = ');
+	} else {
+		return $elm$html$Html$text('°F = ');
+	}
+};
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
@@ -5234,8 +5250,6 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $author$project$Main$selector = function (model) {
@@ -5285,6 +5299,13 @@ var $author$project$Main$selector = function (model) {
 var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $author$project$Main$toLabel = function (converter) {
+	if (converter.$ === 'CtoF') {
+		return $elm$html$Html$text('°F');
+	} else {
+		return $elm$html$Html$text('°C');
+	}
+};
 var $author$project$Main$viewConverter = F4(
 	function (model, color, equivalentTemp, borderColor) {
 		return A2(
@@ -5308,7 +5329,7 @@ var $author$project$Main$viewConverter = F4(
 									A2($elm$html$Html$Attributes$style, 'border-color', borderColor)
 								]),
 							_List_Nil),
-							$elm$html$Html$text('°C = '),
+							$author$project$Main$fromLabel(model.converterType),
 							A2(
 							$elm$html$Html$span,
 							_List_fromArray(
@@ -5319,7 +5340,7 @@ var $author$project$Main$viewConverter = F4(
 								[
 									$elm$html$Html$text(equivalentTemp)
 								])),
-							$elm$html$Html$text('°F')
+							$author$project$Main$toLabel(model.converterType)
 						]))
 				]));
 	});

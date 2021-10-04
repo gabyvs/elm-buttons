@@ -42,6 +42,7 @@ init =
 
 type Msg
     = Change String
+    | Select Converter
 
 
 update : Msg -> Model -> Model
@@ -49,6 +50,9 @@ update msg model =
     case msg of
         Change newInput ->
             { model | celsius = newInput }
+
+        Select converter ->
+            { model | converterType = converter }
 
 
 
@@ -79,14 +83,34 @@ selector model =
         ]
 
 
+fromLabel : Converter -> Html Msg
+fromLabel converter =
+    case converter of
+        CtoF ->
+            text "°C = "
+
+        FtoC ->
+            text "°F = "
+
+
+toLabel : Converter -> Html Msg
+toLabel converter =
+    case converter of
+        CtoF ->
+            text "°F"
+
+        FtoC ->
+            text "°C"
+
+
 viewConverter : Model -> String -> String -> String -> Html Msg
 viewConverter model color equivalentTemp borderColor =
     div []
         [ selector model
         , span []
             [ input [ value model.celsius, onInput Change, style "width" "40px", style "border-color" borderColor ] []
-            , text "°C = "
+            , fromLabel model.converterType
             , span [ style "color" color ] [ text equivalentTemp ]
-            , text "°F"
+            , toLabel model.converterType
             ]
         ]
