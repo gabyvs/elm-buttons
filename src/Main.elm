@@ -3,7 +3,7 @@ module Main exposing (main)
 import Browser
 import Html exposing (Html, div, input, span, text)
 import Html.Attributes exposing (checked, name, style, type_, value)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onClick, onInput)
 
 
 
@@ -73,11 +73,11 @@ selector : Model -> Html Msg
 selector model =
     div []
         [ div []
-            [ input [ type_ "radio", name "converter", value "CtoF", checked (model.converterType == CtoF) ] []
+            [ input [ onClick (Select CtoF), type_ "radio", name "converter", value "CtoF", checked (model.converterType == CtoF) ] []
             , text "Convert Celsius to Fahrenheit"
             ]
         , div []
-            [ input [ type_ "radio", name "converter", value "FtoC", checked (model.converterType == FtoC) ] []
+            [ input [ onClick (Select FtoC), type_ "radio", name "converter", value "FtoC", checked (model.converterType == FtoC) ] []
             , text "Convert Fahrenheit to Celsius"
             ]
         ]

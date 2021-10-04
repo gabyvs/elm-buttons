@@ -5232,6 +5232,9 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
 var $author$project$Main$FtoC = {$: 'FtoC'};
+var $author$project$Main$Select = function (a) {
+	return {$: 'Select', a: a};
+};
 var $elm$json$Json$Encode$bool = _Json_wrap;
 var $elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
@@ -5250,6 +5253,22 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $author$project$Main$selector = function (model) {
@@ -5267,6 +5286,8 @@ var $author$project$Main$selector = function (model) {
 						$elm$html$Html$input,
 						_List_fromArray(
 							[
+								$elm$html$Html$Events$onClick(
+								$author$project$Main$Select($author$project$Main$CtoF)),
 								$elm$html$Html$Attributes$type_('radio'),
 								$elm$html$Html$Attributes$name('converter'),
 								$elm$html$Html$Attributes$value('CtoF'),
@@ -5285,6 +5306,8 @@ var $author$project$Main$selector = function (model) {
 						$elm$html$Html$input,
 						_List_fromArray(
 							[
+								$elm$html$Html$Events$onClick(
+								$author$project$Main$Select($author$project$Main$FtoC)),
 								$elm$html$Html$Attributes$type_('radio'),
 								$elm$html$Html$Attributes$name('converter'),
 								$elm$html$Html$Attributes$value('FtoC'),
