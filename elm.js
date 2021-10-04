@@ -4356,7 +4356,7 @@ function _Browser_load(url)
 	}));
 }
 var $author$project$Main$CtoF = {$: 'CtoF'};
-var $author$project$Main$init = {celsius: '', converterType: $author$project$Main$CtoF};
+var $author$project$Main$init = {converterType: $author$project$Main$CtoF, value: ''};
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -5173,7 +5173,7 @@ var $author$project$Main$update = F2(
 			var newInput = msg.a;
 			return _Utils_update(
 				model,
-				{celsius: newInput});
+				{value: newInput});
 		} else {
 			var converter = msg.a;
 			return _Utils_update(
@@ -5182,6 +5182,14 @@ var $author$project$Main$update = F2(
 		}
 	});
 var $elm$core$String$fromFloat = _String_fromNumber;
+var $author$project$Main$convert = F2(
+	function (converter, value) {
+		if (converter.$ === 'CtoF') {
+			return $elm$core$String$fromFloat((value * 1.8) + 32);
+		} else {
+			return $elm$core$String$fromFloat(((value - 32) * 5) / 9);
+		}
+	});
 var $elm$core$String$toFloat = _String_toFloat;
 var $author$project$Main$Change = function (a) {
 	return {$: 'Change', a: a};
@@ -5346,7 +5354,7 @@ var $author$project$Main$viewConverter = F4(
 							$elm$html$Html$input,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$value(model.celsius),
+									$elm$html$Html$Attributes$value(model.value),
 									$elm$html$Html$Events$onInput($author$project$Main$Change),
 									A2($elm$html$Html$Attributes$style, 'width', '40px'),
 									A2($elm$html$Html$Attributes$style, 'border-color', borderColor)
@@ -5368,14 +5376,14 @@ var $author$project$Main$viewConverter = F4(
 				]));
 	});
 var $author$project$Main$view = function (model) {
-	var _v0 = $elm$core$String$toFloat(model.celsius);
+	var _v0 = $elm$core$String$toFloat(model.value);
 	if (_v0.$ === 'Just') {
-		var celsius = _v0.a;
+		var value = _v0.a;
 		return A4(
 			$author$project$Main$viewConverter,
 			model,
 			'blue',
-			$elm$core$String$fromFloat((celsius * 1.8) + 32),
+			A2($author$project$Main$convert, model.converterType, value),
 			'black');
 	} else {
 		return A4($author$project$Main$viewConverter, model, 'red', '???', 'red');

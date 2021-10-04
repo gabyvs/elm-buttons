@@ -24,14 +24,14 @@ type Converter
 
 
 type alias Model =
-    { celsius : String
+    { value : String
     , converterType : Converter
     }
 
 
 init : Model
 init =
-    { celsius = ""
+    { value = ""
     , converterType = CtoF
     }
 
@@ -49,10 +49,24 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Change newInput ->
-            { model | celsius = newInput }
+            { model | value = newInput }
 
         Select converter ->
             { model | converterType = converter }
+
+
+
+-- HELPERS
+
+
+convert : Converter -> Float -> Float
+convert converter value =
+    case converter of
+        CtoF ->
+            value * 1.8 + 32
+
+        FtoC ->
+            (value - 32) * 5 / 9
 
 
 
@@ -61,9 +75,9 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    case String.toFloat model.celsius of
-        Just celsius ->
-            viewConverter model "blue" (String.fromFloat (celsius * 1.8 + 32)) "black"
+    case String.toFloat model.value of
+        Just value ->
+            viewConverter model "blue" (String.fromFloat (convert model.converterType value)) "black"
 
         Nothing ->
             viewConverter model "red" "???" "red"
@@ -108,7 +122,7 @@ viewConverter model color equivalentTemp borderColor =
     div []
         [ selector model
         , span []
-            [ input [ value model.celsius, onInput Change, style "width" "40px", style "border-color" borderColor ] []
+            [ input [ value model.value, onInput Change, style "width" "40px", style "border-color" borderColor ] []
             , fromLabel model.converterType
             , span [ style "color" color ] [ text equivalentTemp ]
             , toLabel model.converterType
